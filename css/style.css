@@ -1,136 +1,197 @@
-/* --- CONFIGURATION ULTRA DARK --- */
+/* --- CONFIGURATION PREMIUM DARK (OLED) --- */
 :root {
-  /* Couleurs principales */
-  --primary-color: #bb86fc; /* Un violet néon qui ressort bien sur le noir */
-  --secondary-color: #03dac6;
+  /* Palette de couleurs */
+  --primary-color: #bb86fc; /* Violet Néon */
+  --secondary-color: #03dac6; /* Turquoise */
+  --accent-blue: #3b82f6; /* Bleu pour la géo */
 
-  /* Fond et Texte */
-  --bg-color: #000000; /* Noir pur (OLED) */
-  --text-color: #ffffff; /* Blanc pur */
-  --text-dim: #a0aec0; /* Gris pour les textes secondaires */
+  /* Fond et Surfaces */
+  --bg-color: #000000; /* Noir pur pour écrans OLED */
+  --card-bg: #121212; /* Gris de surface (Material Design) */
+  --header-footer-bg: rgba(18, 18, 18, 0.9); /* Effet flou */
 
-  /* Éléments d'interface */
-  --card-bg: #121212; /* Gris très foncé pour les cartes */
-  --tab-bar-bg: #050505; /* Presque noir pour la nav */
-  --border-color: #2d3748; /* Bordures discrètes */
+  /* Texte */
+  --text-main: #ffffff;
+  --text-dim: #a0aec0;
 
-  --header-height: 60px;
+  /* Interface */
+  --border-color: #2d3748;
+  --header-height: 65px;
   --nav-height: 70px;
 }
 
-/* On force le dark mode même si le téléphone est en light */
+/* --- RESET & BASE --- */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
-  font-family: "Roboto", sans-serif;
+  margin: 0;
+  font-family:
+    "Roboto",
+    -apple-system,
+    sans-serif;
   background-color: var(--bg-color);
-  color: var(--text-color);
+  color: var(--text-main);
   line-height: 1.6;
-  overscroll-behavior-y: none;
-  padding-top: var(--header-height);
+  overscroll-behavior-y: none; /* Évite le rebond sur mobile */
+
+  /* Ajustement global pour Safe Areas */
+  padding-top: calc(var(--header-height) + env(safe-area-inset-top));
   padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom));
+}
+
+.container {
+  padding: 20px;
 }
 
 /* --- HEADER --- */
 header {
   position: fixed;
   top: 0;
-  width: 100%;
-  height: var(--header-height);
-  background-color: var(--tab-bar-bg);
+  left: 0;
+  right: 0;
+  height: calc(var(--header-height) + env(safe-area-inset-top));
+  background-color: var(--header-footer-bg);
+  backdrop-filter: blur(10px); /* Effet de flou moderne */
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: env(safe-area-inset-top) 20px 0 20px;
   border-bottom: 1px solid var(--border-color);
   z-index: 1000;
-  padding-top: env(safe-area-inset-top);
 }
 
-/* --- CARTES D'ARTICLES --- */
+header h1 {
+  font-size: 1.2rem;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* --- CARTES MÉTÉO --- */
 .card {
   background: var(--card-bg);
-  border-radius: 12px;
-  border: 1px solid var(--border-color); /* Petite bordure pour séparer du fond noir */
-  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s ease;
 }
 
+.card:active {
+  transform: scale(0.98);
+}
+
 .card h3 {
-  padding: 15px;
-  color: var(--text-color);
+  margin-top: 0;
+  color: var(--primary-color);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card p {
+  margin: 8px 0;
   font-size: 1.1rem;
 }
 
-/* --- BARRE DE NAVIGATION --- */
+/* --- PAGE ADMINISTRATION & GÉO --- */
+.admin-panel {
+  padding: 10px;
+}
+
+.btn-geo {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+.local-card {
+  background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+  border: 1px solid var(--secondary-color); /* Bordure turquoise pour distinguer */
+}
+
+/* --- BARRE DE NAVIGATION (TAB BAR) --- */
 .tab-bar {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   height: calc(var(--nav-height) + env(safe-area-inset-bottom));
-  background-color: var(--tab-bar-bg);
+  background-color: var(--header-footer-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-top: 1px solid var(--border-color);
   padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid var(--border-color);
   z-index: 1000;
 }
 
 .tab-btn {
   background: none;
   border: none;
-  color: var(--text-dim); /* Texte grisé par défaut */
+  color: var(--text-dim);
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   cursor: pointer;
-  flex: 1;
-  transition: color 0.3s;
+  transition: all 0.3s;
+  padding: 10px;
 }
 
 .tab-btn.active {
-  color: var(--primary-color); /* Violet quand actif */
-  font-weight: bold;
+  color: var(--primary-color);
+  transform: translateY(-2px);
 }
 
-/* --- BOUTON INSTALLATION --- */
+/* --- INSTALL & UPDATES --- */
 #install-btn {
-  background-color: var(--primary-color);
-  color: #000; /* Texte noir sur bouton violet pour le contraste */
+  background: var(--primary-color);
+  color: #000;
   border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 8px 14px;
+  border-radius: 20px; /* Plus arrondi, style iOS */
   font-weight: bold;
+  font-size: 0.8rem;
 }
 
 #update-notification {
-  /* On le cache visuellement au lieu d'utiliser display: none */
-  visibility: hidden;
-  opacity: 0;
-  transform: translateX(-50%) translateY(20px);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-
-  /* Positionnement fixe en bas au centre */
   position: fixed;
-  bottom: calc(var(--nav-height) + 20px + env(safe-area-inset-bottom));
+  bottom: calc(var(--nav-height) + 30px + env(safe-area-inset-bottom));
   left: 50%;
-
-  /* Style de la carte */
-  background: #1a1a1a;
-  color: white;
-  border: 1px solid var(--primary-color);
-  border-radius: 12px;
-  padding: 12px 20px;
-  z-index: 2000;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-  text-align: center;
+  transform: translateX(-50%) translateY(100px);
   width: 90%;
   max-width: 400px;
+  background: #1e1e1e;
+  border: 1px solid var(--primary-color);
+  border-radius: 16px;
+  padding: 15px;
+  text-align: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
 }
 
-/* La classe qui sera ajoutée par le JavaScript pour l'afficher */
 #update-notification.show {
   visibility: visible;
   opacity: 1;
@@ -139,47 +200,16 @@ header {
 
 #reload-btn {
   margin-top: 10px;
-  background-color: var(--primary-color);
+  background: var(--primary-color);
   color: #000;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
   font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.1s;
+  width: 100%;
 }
 
-#reload-btn:active {
-  transform: scale(0.95);
-}
-@media all and (display-mode: standalone) {
-  #install-btn {
-    display: none !important;
-  }
-}
-header {
-  /* Garde tes styles actuels (couleur, centrage) et ajoute : */
-  padding-top: env(safe-area-inset-top, 15px);
-  padding-left: env(safe-area-inset-left, 0px);
-  padding-right: env(safe-area-inset-right, 0px);
-}
-
-.tab-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  background: white; /* ou ta couleur */
-  border-top: 1px solid #ddd;
-
-  /* On ajoute la safe area du bas */
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  z-index: 1000;
-}
-
-body {
-  margin: 0;
-  /* On calcule : hauteur de la barre (ex: 60px) + safe area du bas */
-  padding-bottom: calc(60px + env(safe-area-inset-bottom));
+/* --- UTILS --- */
+.hidden {
+  display: none !important;
 }

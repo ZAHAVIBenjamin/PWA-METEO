@@ -156,12 +156,57 @@ async function pageAccueil() {
 function pageAdmin() {
   contentDiv.innerHTML = `
     <h2>ADMINISTRATION</h2>
-    <div>
-      <p>forcer le rouge</p>
-      <p>acces config</p>
-      <p>diagnostique</p>
+    <div class="admin-panel">
+      <button id="geo-btn" class="btn-geo">📍 Ma météo locale</button>
+      <div id="local-weather-result"></div>
+      <hr>
     </div>
   `;
+
+  // On attache l'événement au bouton après l'avoir injecté dans le DOM
+  document.getElementById("geo-btn").addEventListener("click", getLocalWeather);
+}
+
+async function getLocalWeather() {
+  const display = document.getElementById("local-weather-result");
+
+  // Vérifier si la géolocalisation est supportée
+  if (!navigator.geolocation) {
+    display.innerHTML =
+      "<p>La géolocalisation n'est pas supportée par votre navigateur.</p>";
+    return;
+  }
+
+  display.innerHTML = "<p>Recherche de votre position...</p>";
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        display.innerHTML = `
+        <div class="card local-card">
+          <h3>Météo ici (votre position)</h3>
+          <p>Température : ${data.current_weather.temperature} °C</p>
+          <p>Vitesse du vent : ${data.current_weather.windspeed} km/h</p>
+          <small>Lat: ${lat.toFixed(2)} | Lon: ${lon.toFixed(2)}</small>
+        </div>
+      `;
+      } catch (error) {
+        display.innerHTML =
+          "<p>Erreur lors de la récupération de la météo.</p>";
+      }
+    },
+    (error) => {
+      // Gestion des erreurs (refus de l'utilisateur, etc.)
+      display.innerHTML = `<p>Erreur : ${error.message}</p>`;
+    },
+  );
 }
 
 const routes = {
