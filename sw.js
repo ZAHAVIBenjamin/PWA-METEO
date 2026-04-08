@@ -1,7 +1,7 @@
 // importScripts("https://cdn.jsdelivr.net/npm/idb@7/build/umd.js");
 
-const STATIC_CACHE_NAME = "appshell-v4";
-const DYNAMIC_CACHE_NAME = "dynamic-v4";
+const STATIC_CACHE_NAME = "appshell-v5";
+const DYNAMIC_CACHE_NAME = "dynamic-v5";
 const ASSETS_TO_CACHE = [
   "/", // La racine (très important !)
   "/index.html", // Le fichier HTML
