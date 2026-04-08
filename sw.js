@@ -1,4 +1,4 @@
-importScripts("https://cdn.jsdelivr.net/npm/idb@7/build/umd.js");
+// importScripts("https://cdn.jsdelivr.net/npm/idb@7/build/umd.js");
 
 const STATIC_CACHE_NAME = "appshell-v3";
 const DYNAMIC_CACHE_NAME = "dynamic-v3";
@@ -40,14 +40,10 @@ self.addEventListener("fetch", (event) => {
 
   // 1. ISOLER L'API : Si la requête va vers Open-Meteo, on ne fait rien de spécial
   if (url.hostname === "api.open-meteo.com") {
-    // On utilise la stratégie "Network Only" ou "Network First"
     event.respondWith(
-      fetch(event.request).catch(() => {
-        // En cas de panne réseau totale, on essaie de voir si on a une vieille copie en cache
-        return caches.match(event.request);
-      }),
+      fetch(event.request), // On laisse passer la requête normalement
     );
-    return; // TRÈS IMPORTANT : on sort de la fonction ici pour ne pas exécuter la suite
+    return;
   }
   // B. Images : Stale-While-Revalidate — détaillé à l'étape 1 bis
   else if (event.request.destination === "image") {
