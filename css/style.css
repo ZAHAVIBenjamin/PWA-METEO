@@ -157,3 +157,29 @@ header {
     display: none !important;
   }
 }
+header {
+  /* Garde tes styles actuels (couleur, centrage) et ajoute : */
+  padding-top: env(safe-area-inset-top, 15px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: white; /* ou ta couleur */
+  border-top: 1px solid #ddd;
+
+  /* On ajoute la safe area du bas */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 1000;
+}
+
+body {
+  margin: 0;
+  /* On calcule : hauteur de la barre (ex: 60px) + safe area du bas */
+  padding-bottom: calc(60px + env(safe-area-inset-bottom));
+}

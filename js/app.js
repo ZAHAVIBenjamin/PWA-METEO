@@ -1,39 +1,48 @@
 let deferredPrompt;
-
 const installBtn = document.getElementById("install-btn");
 
-// Si l'application est déjà ouverte en tant que PWA installée, on s'assure que le bouton reste caché.
-if (
-  window.matchMedia("(display-mode: fullscreen)").matches ||
-  window.navigator.fullscreen === true
-) {
+// 1. Fonction pour vérifier si l'app est DÉJÀ installée
+function isAppInstalled() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.matchMedia("(display-mode: fullscreen)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
+// 2. Au chargement, si c'est déjà installé, on s'assure que le bouton est caché
+if (isAppInstalled()) {
   installBtn.classList.add("hidden");
 }
-// verifie si on doit afficher le bouton de telechargement
+
+// 3. On n'écoute l'événement que si l'app n'est pas installée
 window.addEventListener("beforeinstallprompt", (e) => {
+  if (isAppInstalled()) return; // Sécurité supplémentaire
+
   e.preventDefault();
   deferredPrompt = e;
-
   installBtn.classList.remove("hidden");
-  console.log(`[PWA] L'evenement beforeinstallprompt a été intercepté.`);
+  console.log(`[PWA] Bouton d'installation prêt.`);
 });
-// installation de l'app sur choix d'utilisateur
+
+// 4. Gestion du clic sur le bouton
 installBtn.addEventListener("click", async () => {
   if (!deferredPrompt) return;
 
   deferredPrompt.prompt();
-
   const { outcome } = await deferredPrompt.userChoice;
-  console.log(`[PWA] Choix de l'utilisteur : ${outcome}`);
+  console.log(`[PWA] Choix utilisateur : ${outcome}`);
 
+  if (outcome === "accepted") {
+    installBtn.classList.add("hidden");
+  }
   deferredPrompt = null;
-
-  installBtn.classList.add("hidden");
 });
 
-// message de confirmation d'installation
+// 5. Cacher le bouton immédiatement si l'utilisateur installe l'app
 window.addEventListener("appinstalled", () => {
-  console.log(`[PWA] App installé avec succes ! `);
+  console.log(`[PWA] Installation réussie !`);
+  installBtn.classList.add("hidden");
 });
 
 if ("serviceWorker" in navigator) {
