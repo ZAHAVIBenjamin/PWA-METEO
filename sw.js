@@ -38,30 +38,16 @@ self.addEventListener("message", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
-  // A. Stratégie NETWORK FIRST pour l'API externe
-  if (url.origin === "https://api.open-meteo.com") {
+  // 1. ISOLER L'API : Si la requête va vers Open-Meteo, on ne fait rien de spécial
+  if (url.hostname === "api.open-meteo.com") {
+    // On utilise la stratégie "Network Only" ou "Network First"
     event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          // On s'assure que la requête a réussi avant de la mettre en cache
-          if (networkResponse && networkResponse.status === 200) {
-            const clonedResponse = networkResponse.clone();
-            caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
-              cache.put(event.request, clonedResponse);
-            });
-          }
-          return networkResponse;
-        })
-        .catch(async (err) => {
-          // Si le réseau échoue, on cherche la réponse en cache
-          const cachedResponse = await caches.match(event.request);
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          // Si RIEN n'est en cache, on renvoie l'erreur au Front-End
-          throw err;
-        }),
+      fetch(event.request).catch(() => {
+        // En cas de panne réseau totale, on essaie de voir si on a une vieille copie en cache
+        return caches.match(event.request);
+      }),
     );
+    return; // TRÈS IMPORTANT : on sort de la fonction ici pour ne pas exécuter la suite
   }
   // B. Images : Stale-While-Revalidate — détaillé à l'étape 1 bis
   else if (event.request.destination === "image") {
@@ -99,8 +85,7 @@ self.addEventListener("fetch", (event) => {
         return fetch(event.request).catch((error) => {
           // Si le réseau échoue (Offline)
           // On vérifie si la requête demandait une page HTML
-          if (event.request.headers.get("accept").includes("text/html")) {
-            // On retourne la page offline du cache statique
+          if (event.request.mode === "navigate") {
             return caches.match("/offline.html");
           }
           // (Optionnel) Ici on pourrait retourner une image placeholder par défaut
