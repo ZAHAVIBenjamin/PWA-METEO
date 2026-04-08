@@ -1,0 +1,159 @@
+/* --- CONFIGURATION ULTRA DARK --- */
+:root {
+  /* Couleurs principales */
+  --primary-color: #bb86fc; /* Un violet néon qui ressort bien sur le noir */
+  --secondary-color: #03dac6;
+
+  /* Fond et Texte */
+  --bg-color: #000000; /* Noir pur (OLED) */
+  --text-color: #ffffff; /* Blanc pur */
+  --text-dim: #a0aec0; /* Gris pour les textes secondaires */
+
+  /* Éléments d'interface */
+  --card-bg: #121212; /* Gris très foncé pour les cartes */
+  --tab-bar-bg: #050505; /* Presque noir pour la nav */
+  --border-color: #2d3748; /* Bordures discrètes */
+
+  --header-height: 60px;
+  --nav-height: 70px;
+}
+
+/* On force le dark mode même si le téléphone est en light */
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  overscroll-behavior-y: none;
+  padding-top: var(--header-height);
+  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom));
+}
+
+/* --- HEADER --- */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: var(--tab-bar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
+  padding-top: env(safe-area-inset-top);
+}
+
+/* --- CARTES D'ARTICLES --- */
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color); /* Petite bordure pour séparer du fond noir */
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.card h3 {
+  padding: 15px;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+/* --- BARRE DE NAVIGATION --- */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: calc(var(--nav-height) + env(safe-area-inset-bottom));
+  background-color: var(--tab-bar-bg);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 1000;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim); /* Texte grisé par défaut */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  flex: 1;
+  transition: color 0.3s;
+}
+
+.tab-btn.active {
+  color: var(--primary-color); /* Violet quand actif */
+  font-weight: bold;
+}
+
+/* --- BOUTON INSTALLATION --- */
+#install-btn {
+  background-color: var(--primary-color);
+  color: #000; /* Texte noir sur bouton violet pour le contraste */
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+#update-notification {
+  /* On le cache visuellement au lieu d'utiliser display: none */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+
+  /* Positionnement fixe en bas au centre */
+  position: fixed;
+  bottom: calc(var(--nav-height) + 20px + env(safe-area-inset-bottom));
+  left: 50%;
+
+  /* Style de la carte */
+  background: #1a1a1a;
+  color: white;
+  border: 1px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 12px 20px;
+  z-index: 2000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+/* La classe qui sera ajoutée par le JavaScript pour l'afficher */
+#update-notification.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#reload-btn {
+  margin-top: 10px;
+  background-color: var(--primary-color);
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+#reload-btn:active {
+  transform: scale(0.95);
+}
+@media all and (display-mode: standalone) {
+  #install-btn {
+    display: none !important;
+  }
+}

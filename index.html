@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>☀️ METEO</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <link rel="apple-touch-icon" href="image/imagepng.png" />
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#1e293b"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>☀️ METEO</h1>
+      <button id="install-btn" class="hidden">Installer l'App</button>
+    </header>
+
+    <main id="content" class="container"></main>
+
+    <div id="update-notification">
+      Nouvelle version disponible !
+      <button id="reload-btn">Mettre à jour</button>
+    </div>
+
+    <nav class="tab-bar">
+      <button class="tab-btn active" onclick="navigate('/')">🏠 Accueil</button>
+      <button class="tab-btn" onclick="navigate('/ADMINISTRATION')">
+        ⚙️ ADMINISTRATION
+      </button>
+    </nav>
+
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>
